@@ -13,8 +13,11 @@ const SubCategorie = () => {
     (cat) => cat.name.toLowerCase() === slug?.toLowerCase()
   ) || { name: slug || "Home Repair" };
 
+  // NAYA: Yahan humne add kiya hai `&& service.status === "active"`
   const filteredServices = services.filter(
-    (service) => service.categoryName?.toLowerCase() === currentCategory.name?.toLowerCase()
+    (service) => 
+      service.categoryName?.toLowerCase() === currentCategory.name?.toLowerCase() &&
+      service.status === "active"
   );
 
   return (
@@ -52,10 +55,9 @@ const SubCategorie = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-14">
         {filteredServices.length === 0 ? (
           <div className="text-center text-gray-500 text-lg sm:text-xl py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
-            No services found for this category yet.
+            No active services found for this category yet.
           </div>
         ) : (
-          /* NAYA: Mobile par 2 column, Tablet par 3, Desktop par 4 */
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             {filteredServices.map((service) => {
               return (

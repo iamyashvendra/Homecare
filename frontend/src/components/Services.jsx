@@ -3,16 +3,15 @@ import { Link } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 
 const Services = () => {
-  // Context se real database wali categories nikal liin
   const { categories } = useContext(AppContext);
-
-  // State to toggle between showing 4 cards or all cards
   const [showAll, setShowAll] = useState(false);
 
-  // Agar showAll true hai toh saare categories dikhao, nahi toh shuru ke 4
-  const displayedCategories = showAll ? categories : categories.slice(0, 4);
+  // NAYA: Pehle sirf active categories ko filter kiya
+  const activeCategories = categories.filter(cat => cat.status === "active");
 
-  // Background colors array fallback ke liye agar DB me bgColor na ho
+  // Fir check kiya ki saari active dikhani hain ya sirf pehli 4
+  const displayedCategories = showAll ? activeCategories : activeCategories.slice(0, 4);
+
   const bgColors = ["bg-sky-50", "bg-amber-50", "bg-emerald-50", "bg-purple-50", "bg-rose-50", "bg-indigo-50"];
 
   return (
@@ -20,7 +19,6 @@ const Services = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         
         {displayedCategories.map((card, index) => {
-          // Dynamic background color assign karna agar DB me na ho
           const cardBg = card.bgColor || bgColors[index % bgColors.length];
 
           return (
@@ -64,7 +62,8 @@ const Services = () => {
       </div>
 
       {/* View More / View Less Button */}
-      {categories.length > 4 && (
+      {/* NAYA: Button tabhi dikhega jab active categories 4 se zyada hon */}
+      {activeCategories.length > 4 && (
         <div className="mt-10 text-center" data-aos="fade-up">
           <button 
             onClick={() => setShowAll(!showAll)}

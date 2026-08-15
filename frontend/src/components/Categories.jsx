@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 function Categories() {
   const { categories } = useContext(AppContext);
 
+  // NAYA: Sirf un categories ko lo jinka status "active" hai
+  const activeCategories = categories.filter(cat => cat.status === "active");
+
   return (
     <div className="w-full py-5">
       {/* Heading */}
@@ -19,9 +22,10 @@ function Categories() {
 
       {/* Categories Slider */}
       <div className="overflow-hidden w-full">
-        {categories.length > 0 ? (
+        {activeCategories.length > 0 ? (
           <div className="flex w-max gap-10 animate-scroll hover:[animation-play-state:paused]">
-            {[...categories, ...categories].map((item, index) => (
+            {/* Yahan ab categories ki jagah activeCategories map hoga */}
+            {[...activeCategories, ...activeCategories].map((item, index) => (
               <Link
                 key={index}
                 to={`/subcategory/${item.name}`}
@@ -41,7 +45,7 @@ function Categories() {
           </div>
         ) : (
           <div className="text-center text-gray-500 py-10">
-            No categories available right now.
+            No active categories available right now.
           </div>
         )}
       </div>
