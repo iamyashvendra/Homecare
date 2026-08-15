@@ -12,7 +12,7 @@ import { MdBlender, MdAcUnit, MdMedicalServices, MdCleaningServices, MdOtherHous
 
 // 1. Hero Data
 export const heroData = {
-  bgImage: "src/assets/images/hero_image.avif",
+  bgImage: "frontend/src/assets/images/hero_image.avif",
   title: "Professional Cleaning",
   subtitle: "Services in Karauli",
   description: "Homecare Solutions – India's trusted cleaning service for homes, villas and apartments since 2016."
