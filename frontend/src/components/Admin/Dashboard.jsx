@@ -80,7 +80,8 @@ const Dashboard = () => {
                     <tr key={item._id} className="border-b transition hover:bg-slate-50">
                       <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                         <div className="flex items-center gap-3">
-                          <img src={item.image || "https://via.placeholder.com/150"} className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover" alt="" />
+                          {/* NAYA: Yahan item.image ki jagah item.profileImage kar diya */}
+                          <img src={item.profileImage || "https://via.placeholder.com/150"} className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover" alt="" />
                           <div>
                             <p className="font-medium text-slate-800">{item.fullName}</p>
                             <p className="text-xs text-gray-500">{item.email}</p>

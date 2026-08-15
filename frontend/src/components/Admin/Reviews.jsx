@@ -57,7 +57,14 @@ const Reviews = () => {
             <div key={review._id} className="bg-white rounded-xl shadow-sm border border-slate-100 p-5 sm:p-6 hover:shadow-md transition">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-3">
-                  <img src={review.userImage || "https://via.placeholder.com/150"} alt={review.userName} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border" />
+                  
+                  {/* NAYA: Placeholder ki jagah UI-Avatars lagaya, aur real userImage ko priority di */}
+                  <img 
+                    src={review.userImage || `https://ui-avatars.com/api/?name=${review.userName}&background=random&color=fff&rounded=true`} 
+                    alt={review.userName} 
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border shadow-sm" 
+                  />
+                  
                   <div>
                     <h3 className="font-semibold text-slate-800 text-sm sm:text-base">{review.userName}</h3>
                     <p className="text-xs sm:text-sm text-gray-500">{review.serviceName}</p>
