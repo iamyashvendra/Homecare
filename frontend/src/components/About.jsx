@@ -1,4 +1,5 @@
 import React from 'react';
+import artImg from '../assets/images/art.webp'; 
 
 function About() {
   return (
@@ -12,7 +13,7 @@ function About() {
             className="flex justify-center order-1"
           >
             <img
-              src="frontend\src\assets\images\art.png"
+              src={artImg}
               alt="Line Art Illustration"
               className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl h-auto object-contain"
             />

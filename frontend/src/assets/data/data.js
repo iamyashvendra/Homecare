@@ -9,10 +9,10 @@ import {
   FaPlug, FaBook, FaGasPump, FaUserTie
 } from "react-icons/fa6"; //[cite: 3]
 import { MdBlender, MdAcUnit, MdMedicalServices, MdCleaningServices, MdOtherHouses } from "react-icons/md"; //[cite: 3]
-
+import heroImage from '../images/hero_image.avif';
 // 1. Hero Data
 export const heroData = {
-  bgImage: "frontend/src/assets/images/hero_image.png",
+  bgImage: heroImage,
   title: "Professional Cleaning",
   subtitle: "Services in Karauli",
   description: "Homecare Solutions – India's trusted cleaning service for homes, villas and apartments since 2016."
