@@ -6,8 +6,7 @@ import api from "../utils/api";
 import { 
   FaArrowLeft, FaCircleCheck, FaStar, FaAward, 
   FaBriefcase, FaImage, FaLocationDot, 
-  FaClock, FaLanguage, FaTruckFast, FaPhone, FaEnvelope, FaPenToSquare,
-  FaWhatsapp // <--- NAYA: WhatsApp Icon import kiya
+  FaClock, FaLanguage, FaTruckFast, FaPhone, FaEnvelope, FaPenToSquare 
 } from "react-icons/fa6";
 import { useAuth } from "@clerk/clerk-react"; 
 
@@ -20,6 +19,8 @@ const ProviderCard = () => {
 
   const [reviews, setReviews] = useState([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  
+  // NAYA: Full screen image track karne ke liye state
   const [selectedImage, setSelectedImage] = useState(null);
 
   const [reviewForm, setReviewForm] = useState({
@@ -84,22 +85,6 @@ const ProviderCard = () => {
     </div>
   );
 
-  // ================= NAYA: WhatsApp Link Logic =================
-  let whatsappNumber = "";
-  if (worker.phone) {
-    // Number me se space, dash, bracket sab hata do (sirf numbers rakho)
-    let cleanedNumber = worker.phone.replace(/\D/g, '');
-    
-    // Agar 10 digit ka number hai, toh India ka code (91) aage laga do
-    if (cleanedNumber.length === 10) {
-      whatsappNumber = `91${cleanedNumber}`;
-    } else {
-      whatsappNumber = cleanedNumber;
-    }
-  }
-  const whatsappLink = `https://wa.me/${whatsappNumber}`;
-  // =============================================================
-
   const handleReviewChange = (e) => {
     const { name, value } = e.target;
     setReviewForm(prev => ({ ...prev, [name]: value }));
@@ -132,18 +117,6 @@ const ProviderCard = () => {
     }
   };
 
-  const getBannerImage = () => {
-    if (worker.bannerImage) return worker.bannerImage;
-    const category = (worker.category || worker.service || "").toLowerCase();
-    if (category.includes("electric")) return "https://images.unsplash.com/photo-1621905252507-b35492d90cb4?auto=format&fit=crop&w=1200&q=80";
-    if (category.includes("plumb")) return "https://images.unsplash.com/photo-1505798577917-a65157d3320a?auto=format&fit=crop&w=1200&q=80";
-    if (category.includes("clean")) return "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80";
-    if (category.includes("repair")) return "https://images.unsplash.com/photo-1581141849291-1125c7b692b5?auto=format&fit=crop&w=1200&q=80";
-    if (category.includes("paint")) return "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=1200&q=80";
-    if (category.includes("medical") || category.includes("care")) return "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&w=1200&q=80";
-    return "https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=1200&q=80";
-  };
-
   return (
     <div className="bg-[#f4f6f9] min-h-screen pb-12 font-sans relative">
       <header className="bg-white px-6 py-4 shadow-sm flex items-center justify-between sticky top-0 z-50">
@@ -159,15 +132,16 @@ const ProviderCard = () => {
       <div className="max-w-4xl mx-auto mt-8 px-4">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           
+          {/* NAYA: Banner ab dynamic ho gaya hai, DB se aayega */}
           <div 
             className="h-48 md:h-56 bg-cover bg-center"
-            style={{ backgroundImage: `url('${getBannerImage()}')` }}
+            style={{ backgroundImage: `url('${worker.bannerImage || "https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=1200&q=80"}')` }}
           ></div>
 
           <div className="flex flex-col md:flex-row items-center md:items-end justify-between px-6 md:px-10 pb-6 relative -mt-16 md:-mt-20 gap-4 md:gap-6">
             <div className="flex flex-col md:flex-row items-center md:items-end gap-4 md:gap-6 text-center md:text-left">
               <img 
-                src={worker.profileImage || "https://ui-avatars.com/api/?name=Provider&background=random"} 
+                src={worker.profileImage || "https://via.placeholder.com/150"} 
                 alt={worker.fullName} 
                 className="w-32 h-32 rounded-full border-4 border-white object-cover shadow-md bg-gray-200 shrink-0 relative z-10"
               />
@@ -179,24 +153,12 @@ const ProviderCard = () => {
               </div>
             </div>
 
-            {/* NAYA: Buttons container (WhatsApp + Review) */}
-            <div className="flex items-center gap-3 z-10">
-              <a 
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-[#25D366] hover:bg-[#1ebe57] text-white font-bold px-4 py-2.5 rounded-xl shadow transition cursor-pointer flex items-center gap-2 text-sm"
-              >
-                <FaWhatsapp className="text-lg" /> Chat
-              </a>
-
-              <button 
-                onClick={() => setIsReviewModalOpen(true)}
-                className="bg-[#001f3f] hover:bg-blue-900 text-white font-semibold px-4 py-2.5 rounded-xl shadow transition cursor-pointer flex items-center gap-2 text-sm"
-              >
-                <FaPenToSquare /> Review
-              </button>
-            </div>
+            <button 
+              onClick={() => setIsReviewModalOpen(true)}
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow transition cursor-pointer flex items-center gap-2 text-sm z-10"
+            >
+              <FaPenToSquare /> Write a Review
+            </button>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between md:justify-start gap-6 md:gap-16 px-6 md:px-10 py-6 border-y border-gray-100 bg-gray-50">
@@ -245,6 +207,7 @@ const ProviderCard = () => {
                       key={index} 
                       src={imgUrl} 
                       alt={`Work ${index + 1}`} 
+                      // NAYA: Image par click lagaya fullscreen open karne ke liye
                       onClick={() => setSelectedImage(imgUrl)}
                       className="w-full h-24 object-cover rounded-lg bg-gray-200 cursor-pointer hover:opacity-80 transition shadow-sm hover:shadow-md" 
                     />
@@ -281,18 +244,6 @@ const ProviderCard = () => {
                   <FaPhone className="text-[#001f3f] text-base mt-1 shrink-0" />
                   <span><strong className="text-gray-900 block mb-1">Phone:</strong> {worker.phone || "Not provided"}</span>
                 </li>
-
-                {/* NAYA: WhatsApp detail list me bhi add kiya */}
-                <li className="flex items-start gap-4">
-                  <FaWhatsapp className="text-[#25D366] text-xl shrink-0" />
-                  <span>
-                    <strong className="text-gray-900 block mb-1">WhatsApp:</strong> 
-                    <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline font-medium">
-                      Message Now
-                    </a>
-                  </span>
-                </li>
-
                 <li className="flex items-start gap-4">
                   <FaEnvelope className="text-[#001f3f] text-base mt-1 shrink-0" />
                   <span><strong className="text-gray-900 block mb-1">Email:</strong> {worker.email || "Not provided"}</span>
@@ -319,6 +270,7 @@ const ProviderCard = () => {
         </div>
       </div>
 
+      {/* Review Modal */}
       {isReviewModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
@@ -353,11 +305,13 @@ const ProviderCard = () => {
         </div>
       )}
 
+      {/* NAYA: Instagram Style Full Screen Image Viewer Modal */}
       {selectedImage && (
         <div 
           className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 backdrop-blur-sm cursor-zoom-out"
-          onClick={() => setSelectedImage(null)} 
+          onClick={() => setSelectedImage(null)} // Click outside to close
         >
+          {/* Close button (X) */}
           <button 
             className="absolute top-4 right-4 sm:top-6 sm:right-8 text-white/70 hover:text-white text-4xl cursor-pointer transition-colors z-[101]"
             onClick={() => setSelectedImage(null)}
@@ -369,7 +323,7 @@ const ProviderCard = () => {
             src={selectedImage} 
             alt="Work Fullscreen" 
             className="max-h-[90vh] max-w-full object-contain rounded-lg shadow-2xl cursor-default"
-            onClick={(e) => e.stopPropagation()} 
+            onClick={(e) => e.stopPropagation()} // Click image won't close, only clicking bg will (like Instagram)
           />
         </div>
       )}
