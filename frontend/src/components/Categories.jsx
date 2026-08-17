@@ -1,39 +1,47 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { AppContext } from "../context/AppContext";
 import { Link } from "react-router-dom";
 
 function Categories() {
   const { categories } = useContext(AppContext);
-  const activeCategories = categories.filter(cat => cat.status === "active");
+  const activeCategories = categories.filter((cat) => cat.status === "active");
 
-  // NAYA: Auto-scroll aur swipe handle karne ke liye variables
   const scrollRef = useRef(null);
-  const [isInteracting, setIsInteracting] = useState(false);
+  const isInteracting = useRef(false);
 
   useEffect(() => {
     const slider = scrollRef.current;
-    if (!slider) return;
+    
+    // NAYA: Jab tak categories load na ho jayein, tab tak auto-scroll start mat karo
+    if (!slider || activeCategories.length === 0) return;
 
-    let animationFrameId;
+    let animationId;
 
-    // Ye function slider ko dheere-dheere aage badhayega
-    const scroll = () => {
-      if (!isInteracting) {
-        slider.scrollLeft += 1; // Scrolling ki speed (is number ko badha kar speed fast kar sakte ho)
+    const playScroll = () => {
+      if (!isInteracting.current) {
+        slider.scrollLeft += 1;
 
-        // Jab aadhi width cross ho jaye, toh chupke se wapas start me bhej do (Infinite loop)
+        // Loop: Jaise hi aadhi limit par pahuche, wapas 0 par bhej do (smooth infinite loop)
         if (slider.scrollLeft >= slider.scrollWidth / 2) {
           slider.scrollLeft = 0;
         }
       }
-      animationFrameId = requestAnimationFrame(scroll);
+      animationId = requestAnimationFrame(playScroll);
     };
 
-    animationFrameId = requestAnimationFrame(scroll);
+    animationId = requestAnimationFrame(playScroll);
 
-    // Clean up function
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [isInteracting]); // Jab finger touch hogi tab state change hogi
+    return () => cancelAnimationFrame(animationId);
+    
+  }, [activeCategories.length]); // NAYA: Data aane ke baad ye wapas run hoga!
+
+  // NAYA: Array ko 4 baar repeat kiya hai taaki hamesha overflow ho aur auto-scroll kaam kare
+  const displayCategories = [
+    ...activeCategories,
+    ...activeCategories,
+    ...activeCategories,
+    ...activeCategories,
+  ];
 
   return (
     <div className="w-full py-5 px-4 sm:px-0">
@@ -50,15 +58,15 @@ function Categories() {
       {/* Categories Swipeable + Auto-scroll Container */}
       <div className="w-full relative">
         {activeCategories.length > 0 ? (
-          <div 
+          <div
             ref={scrollRef}
             className="flex gap-6 sm:gap-10 overflow-x-auto custom-scrollbar"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            // Jab mouse ya finger touch ho, toh auto-scroll rok do
-            onMouseEnter={() => setIsInteracting(true)}
-            onMouseLeave={() => setIsInteracting(false)}
-            onTouchStart={() => setIsInteracting(true)}
-            onTouchEnd={() => setIsInteracting(false)}
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            onMouseEnter={() => (isInteracting.current = true)}
+            onMouseLeave={() => (isInteracting.current = false)}
+            onTouchStart={() => (isInteracting.current = true)}
+            onTouchEnd={() => (isInteracting.current = false)}
+            onTouchMove={() => (isInteracting.current = true)}
           >
             {/* Scrollbar hide karne ke liye inline CSS */}
             <style>
@@ -69,8 +77,8 @@ function Categories() {
               `}
             </style>
 
-            {/* Loop banaye rakhne ke liye categories ko 2 baar lagaya hai */}
-            {[...activeCategories, ...activeCategories].map((item, index) => (
+            {/* Loop banaye rakhne ke liye map */}
+            {displayCategories.map((item, index) => (
               <Link
                 key={index}
                 to={`/subcategory/${item.name}`}
