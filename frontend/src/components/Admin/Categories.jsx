@@ -28,19 +28,19 @@ const Categories = () => {
 
     if (editingId) {
       const response = await updateCategory(editingId, formData);
-      if (response.success) { alert("Category update ho gayi!"); resetForm(); }
+      if (response.success) { alert("Category updated!"); resetForm(); }
       else alert(response.message || "Update error.");
     } else {
-      if (!name || !image) { alert("Naam aur Image dono zaroori hain!"); setLoading(false); return; }
+      if (!name || !image) { alert("Both the name and the image are important!"); setLoading(false); return; }
       const response = await addCategory(formData);
-      if (response.success) { alert("Category add ho gayi!"); resetForm(); }
+      if (response.success) { alert("Category added!"); resetForm(); }
       else alert(response.message || "Add error.");
     }
     setLoading(false);
   };
 
   const handleDeleteClick = async (id) => {
-    if (window.confirm("Kya tum sach me is category ko delete karna chahte ho?")) {
+    if (window.confirm("Do you really want to delete this category?")) {
       const response = await deleteCategory(id);
       if (!response.success) alert(response.message || "Delete error!");
     }

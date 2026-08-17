@@ -13,19 +13,18 @@ export const getCategories = async (req, res) => {
 };
 
 // POST: Nayi category add karna
-// POST: Nayi category add karna
 export const createCategory = async (req, res) => {
   try {
     const { name, status } = req.body; 
 
     // Safety Check 1: Agar name nahi aaya
     if (!name) {
-      return res.status(400).json({ success: false, message: 'Category ka naam dena zaroori hai' });
+      return res.status(400).json({ success: false, message: 'It is mandatory to provide a category name.' });
     }
 
     // Safety Check 2: Agar image upload nahi hui
     if (!req.file) {
-      return res.status(400).json({ success: false, message: 'Category ki image upload karna zaroori hai' });
+      return res.status(400).json({ success: false, message: 'Uploading a category image is mandatory.' });
     }
 
     // 1. Name se automatic slug generate karna 

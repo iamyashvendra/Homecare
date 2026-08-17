@@ -18,7 +18,7 @@ export const AppProvider = ({ children }) => {
       const res = await api.get("/partners?status=all");
       setPartners(res.data.data);
     } catch (err) {
-      console.error("Partners fetch karne me error:", err);
+      console.error("Error fetching partners:", err);
     }
   };
 
@@ -45,6 +45,19 @@ export const AppProvider = ({ children }) => {
     } catch (err) {
       console.error("Delete partner error:", err);
       return { success: false, message: err.response?.data?.message || "Delete error" };
+    }
+  };
+
+  const editPartnerProfile = async (id, formData) => {
+    try {
+      await api.put(`/partners/${id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+      fetchPartners(); // Data update hone ke baad list ko refresh kar do
+      return { success: true };
+    } catch (err) {
+      console.error("Edit profile error:", err);
+      return { success: false, message: err.response?.data?.message || "Update error" };
     }
   };
 
@@ -200,6 +213,7 @@ export const AppProvider = ({ children }) => {
         fetchPartners,
         updatePartnerStatus,
         deletePartner,
+        editPartnerProfile,
         // Categories
         categories,
         fetchCategories,

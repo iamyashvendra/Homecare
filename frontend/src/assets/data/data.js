@@ -15,7 +15,7 @@ export const heroData = {
   bgImage: heroImage,
   title: "Professional Cleaning",
   subtitle: "Services in Karauli",
-  description: "Homecare Solutions – India's trusted cleaning service for homes, villas and apartments since 2016."
+  description: "Homecare Solutions – India's trusted cleaning service for homes, villas and apartments since 2026."
 }; //[cite: 3]
 
 // 2. Experience / Stats Data
@@ -258,26 +258,30 @@ export const reviews = [
 // 7. FAQ Data
 export const faqData = [
   {
-    question: "How do I book a home service?",
-    answer: "Booking is very simple! Just log in to your account, select the service you need (like Plumber, Deep Cleaning, etc.), choose your preferred date and time, and confirm your booking."
+    question: "How do I find and book a service on HomeCare?",
+    answer: "Booking is very simple! Browse our service categories, select a professional that fits your needs, and check their profile. You can directly call or email them using the contact details provided on their page."
   },
   {
-    question: "Are your professionals verified and trustworthy?",
-    answer: "Absolutely. All our partners go through a strict background check, skill verification, and training process before they are onboarded to ensure your safety and high-quality service."
+    question: "Do I need to create an account to view worker details?",
+    answer: "Yes, to ensure privacy and security, you need to log in to our platform to view detailed profiles, contact numbers, and work galleries of our professionals."
   },
   {
-    question: "What if I am not satisfied with the service?",
-    answer: "Customer satisfaction is our top priority. If you are not happy with the work, please contact our support team within 24 hours, and we will arrange a free rework or help you with a resolution."
+    question: "How much does a service or home visit cost?",
+    answer: "Every professional has their own 'Visiting Charge' which is clearly displayed on their profile. The final cost of the repair or service can be discussed directly with the professional before hiring."
   },
   {
-    question: "Do I have to pay before the service is completed?",
-    answer: "No, you don't have to pay in advance. You can choose to pay online or via cash directly to the professional only after the service is successfully completed."
+    question: "Are the professionals on this platform trusted?",
+    answer: "Yes, every professional partner's registration request is manually reviewed and approved by our admin team before their profile becomes visible to the public."
   },
   {
-    question: "Are there any hidden or visiting charges?",
-    answer: "We believe in transparent pricing. The visiting charge is clearly mentioned when you book. If you proceed with the repair/service, the visiting charge is usually adjusted in the final bill."
+    question: "How can I register myself as a professional/partner?",
+    answer: "Click on 'Become a Partner' in the top menu. Fill out your details, select your service category, upload your previous work photos, and submit. Once approved by our team, you will start getting clients!"
+  },
+  {
+    question: "Can I edit my professional profile or update my gallery later?",
+    answer: "Absolutely! Once you are an approved partner, simply log in with your email. You will see an 'Edit Profile' button in the menu where you can update your bio, visiting charges, and portfolio images anytime."
   }
-]; //[cite: 4]
+];
 
 
 // 8. Admin Dashboard Stats

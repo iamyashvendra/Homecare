@@ -7,7 +7,7 @@ const Dashboard = () => {
   const [search, setSearch] = useState("");
 
   const handleDelete = (id) => {
-    if(window.confirm("Kya tum sach me is partner ko hataana chahte ho?")) {
+    if(window.confirm("Do you really want to remove this partner?")) {
       deletePartner(id)
         .then(() => console.log("Partner deleted"))
         .catch((err) => console.error("Error:", err));

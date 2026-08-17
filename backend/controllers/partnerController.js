@@ -4,20 +4,24 @@ import Partner from '../models/Partner.js';
 export const registerPartner = async (req, res) => {
   try {
     const {
-      fullName, phone, email, category, service, experience, // <--- yahan 'service' destructure kiya
+      fullName, phone, email, category, service, experience,
       languages, visitingCharge, city, workingHours, bio,
     } = req.body;
 
     const profileImageUrl = req.files && req.files['profileImage'] ? req.files['profileImage'][0].path : '';
+    
+    const bannerImageUrl = req.files && req.files['bannerImage'] ? req.files['bannerImage'][0].path : '';
     
     const galleryUrls = req.files && req.files['gallery'] 
       ? req.files['gallery'].map((file) => file.path)
       : [];
 
     const newPartner = new Partner({
-      fullName, phone, email, category, service, experience, // <--- yahan pass kar diya
+      fullName, phone, email, category, service, experience,
       languages, visitingCharge, city, workingHours, bio,
-      profileImage: profileImageUrl, gallery: galleryUrls,
+      profileImage: profileImageUrl, 
+      bannerImage: bannerImageUrl, // NAYA: Database save me pass kiya[cite: 4]
+      gallery: galleryUrls,
     });
 
     const savedPartner = await newPartner.save();
@@ -108,5 +112,50 @@ export const deletePartner = async (req, res) => {
   } catch (error) {
     console.error('Delete Partner Error: ', error);
     res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// 5. Update Partner Profile (Provider khud edit karega)
+export const updatePartnerProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Naya data jo frontend form se aayega
+    const updateData = { ...req.body };
+
+    // Agar user ne nayi profile image upload ki hai
+    if (req.files && req.files['profileImage']) {
+      updateData.profileImage = req.files['profileImage'][0].path;
+    }
+    
+    // Agar user ne naya banner upload kiya hai
+    if (req.files && req.files['bannerImage']) {
+      updateData.bannerImage = req.files['bannerImage'][0].path;
+    }
+
+    // Agar user ne nayi gallery upload ki hai
+    if (req.files && req.files['gallery']) {
+      updateData.gallery = req.files['gallery'].map((file) => file.path);
+    }
+
+    // Database mein find karke update karo
+    const updatedPartner = await Partner.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedPartner) {
+      return res.status(404).json({ success: false, message: 'Partner not found' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully!',
+      data: updatedPartner,
+    });
+  } catch (error) {
+    console.error('Update Profile Error: ', error);
+    res.status(500).json({ success: false, message: 'Server Error, could not update profile.' });
   }
 };

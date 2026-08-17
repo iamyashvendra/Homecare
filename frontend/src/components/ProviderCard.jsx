@@ -15,18 +15,20 @@ const ProviderCard = () => {
   const navigate = useNavigate();
   const { partners } = useContext(AppContext);
   
-  // Clerk se auth status aur token lene ke liye
   const { isLoaded, isSignedIn, getToken } = useAuth(); 
 
   const [reviews, setReviews] = useState([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  
+  // NAYA: Full screen image track karne ke liye state
+  const [selectedImage, setSelectedImage] = useState(null);
+
   const [reviewForm, setReviewForm] = useState({
     userName: "",
     rating: 5,
     comment: ""
   });
 
-  // 1. Agar login nahi hai, toh redirect alert dikhao
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
       if (!Swal.isVisible()) {
@@ -45,7 +47,6 @@ const ProviderCard = () => {
     }
   }, [isLoaded, isSignedIn, navigate]);
 
-  // 2. Reviews fetch karo 
   useEffect(() => {
     const fetchProviderReviews = async () => {
       try {
@@ -63,12 +64,10 @@ const ProviderCard = () => {
     fetchProviderReviews();
   }, [providerId]);
 
-  // NAYA: Agar user login NAHI hai, toh profile ko render hi mat karo (Blank background dikhao)
   if (isLoaded && !isSignedIn) {
     return <div className="min-h-screen bg-[#f4f6f9]"></div>;
   }
 
-  // Loading state
   if (!isLoaded || partners.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f4f6f9]">
@@ -91,52 +90,30 @@ const ProviderCard = () => {
     setReviewForm(prev => ({ ...prev, [name]: value }));
   };
 
-  // 3. Review Submit function
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
-
     if (!isSignedIn) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Login Required',
-        text: 'Please login first to submit a review!',
-      });
+      Swal.fire({ icon: 'warning', title: 'Login Required', text: 'Please login first to submit a review!' });
       return;
     }
-
     try {
       const token = await getToken();
-      
       const res = await api.post("/reviews", {
         partnerId: providerId,
         userName: reviewForm.userName,
         rating: Number(reviewForm.rating),
         comment: reviewForm.comment
       }, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
+        headers: { "Authorization": `Bearer ${token}` }
       });
-
       if (res.data.success) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Review Added!',
-          text: 'Thank you for your valuable feedback.',
-          timer: 2000,
-          showConfirmButton: false
-        });
+        Swal.fire({ icon: 'success', title: 'Review Added!', timer: 2000, showConfirmButton: false });
         setReviews(prev => [res.data.data, ...prev]);
         setIsReviewModalOpen(false);
         setReviewForm({ userName: "", rating: 5, comment: "" });
       }
     } catch (error) {
-      console.error("Review Submit Error:", error);
-      Swal.fire({ 
-        icon: 'error', 
-        title: 'Server Error', 
-        text: error.response?.data?.message || 'Could not submit review.' 
-      });
+      Swal.fire({ icon: 'error', title: 'Server Error', text: error.response?.data?.message || 'Could not submit review.' });
     }
   };
 
@@ -154,9 +131,11 @@ const ProviderCard = () => {
 
       <div className="max-w-4xl mx-auto mt-8 px-4">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          
+          {/* NAYA: Banner ab dynamic ho gaya hai, DB se aayega */}
           <div 
             className="h-48 md:h-56 bg-cover bg-center"
-            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=1200&q=80')" }}
+            style={{ backgroundImage: `url('${worker.bannerImage || "https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=1200&q=80"}')` }}
           ></div>
 
           <div className="flex flex-col md:flex-row items-center md:items-end justify-between px-6 md:px-10 pb-6 relative -mt-16 md:-mt-20 gap-4 md:gap-6">
@@ -224,7 +203,14 @@ const ProviderCard = () => {
               <div className="grid grid-cols-3 gap-3 mb-8">
                 {worker.gallery && worker.gallery.length > 0 ? (
                   worker.gallery.map((imgUrl, index) => (
-                    <img key={index} src={imgUrl} alt={`Work ${index + 1}`} className="w-full h-24 object-cover rounded-lg bg-gray-200" />
+                    <img 
+                      key={index} 
+                      src={imgUrl} 
+                      alt={`Work ${index + 1}`} 
+                      // NAYA: Image par click lagaya fullscreen open karne ke liye
+                      onClick={() => setSelectedImage(imgUrl)}
+                      className="w-full h-24 object-cover rounded-lg bg-gray-200 cursor-pointer hover:opacity-80 transition shadow-sm hover:shadow-md" 
+                    />
                   ))
                 ) : (
                   <p className="col-span-3 text-sm text-gray-500">No gallery images available.</p>
@@ -284,6 +270,7 @@ const ProviderCard = () => {
         </div>
       </div>
 
+      {/* Review Modal */}
       {isReviewModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
@@ -293,17 +280,11 @@ const ProviderCard = () => {
             <form onSubmit={handleReviewSubmit} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">Your Name</label>
-                <input 
-                  type="text" name="userName" required value={reviewForm.userName} onChange={handleReviewChange}
-                  placeholder="Enter your name" className="w-full h-11 px-3 border border-gray-200 rounded-xl text-sm outline-none focus:border-green-600"
-                />
+                <input type="text" name="userName" required value={reviewForm.userName} onChange={handleReviewChange} placeholder="Enter your name" className="w-full h-11 px-3 border border-gray-200 rounded-xl text-sm outline-none focus:border-green-600" />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">Rating (1 to 5)</label>
-                <select 
-                  name="rating" value={reviewForm.rating} onChange={handleReviewChange}
-                  className="w-full h-11 px-3 border border-gray-200 rounded-xl text-sm outline-none focus:border-green-600 bg-white"
-                >
+                <select name="rating" value={reviewForm.rating} onChange={handleReviewChange} className="w-full h-11 px-3 border border-gray-200 rounded-xl text-sm outline-none focus:border-green-600 bg-white">
                   <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
                   <option value="4">⭐⭐⭐⭐ (4/5)</option>
                   <option value="3">⭐⭐⭐ (3/5)</option>
@@ -313,30 +294,40 @@ const ProviderCard = () => {
               </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1">Review Comments</label>
-                <textarea 
-                  name="comment" required rows="3" value={reviewForm.comment} onChange={handleReviewChange}
-                  placeholder="Write your review here..." className="w-full p-3 border border-gray-200 rounded-xl text-sm outline-none focus:border-green-600 resize-none"
-                />
+                <textarea name="comment" required rows="3" value={reviewForm.comment} onChange={handleReviewChange} placeholder="Write your review here..." className="w-full p-3 border border-gray-200 rounded-xl text-sm outline-none focus:border-green-600 resize-none" />
               </div>
-
               <div className="flex gap-3 mt-6">
-                <button 
-                  type="button" onClick={() => setIsReviewModalOpen(false)}
-                  className="flex-1 py-3 rounded-xl border border-gray-200 font-semibold text-gray-600 hover:bg-gray-50 transition cursor-pointer text-sm"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  className="flex-1 py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition cursor-pointer text-sm shadow"
-                >
-                  Submit Review
-                </button>
+                <button type="button" onClick={() => setIsReviewModalOpen(false)} className="flex-1 py-3 rounded-xl border border-gray-200 font-semibold text-gray-600 hover:bg-gray-50 transition cursor-pointer text-sm">Cancel</button>
+                <button type="submit" className="flex-1 py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition cursor-pointer text-sm shadow">Submit Review</button>
               </div>
             </form>
           </div>
         </div>
       )}
+
+      {/* NAYA: Instagram Style Full Screen Image Viewer Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 backdrop-blur-sm cursor-zoom-out"
+          onClick={() => setSelectedImage(null)} // Click outside to close
+        >
+          {/* Close button (X) */}
+          <button 
+            className="absolute top-4 right-4 sm:top-6 sm:right-8 text-white/70 hover:text-white text-4xl cursor-pointer transition-colors z-[101]"
+            onClick={() => setSelectedImage(null)}
+          >
+            &times;
+          </button>
+          
+          <img 
+            src={selectedImage} 
+            alt="Work Fullscreen" 
+            className="max-h-[90vh] max-w-full object-contain rounded-lg shadow-2xl cursor-default"
+            onClick={(e) => e.stopPropagation()} // Click image won't close, only clicking bg will (like Instagram)
+          />
+        </div>
+      )}
+
     </div>
   );
 };

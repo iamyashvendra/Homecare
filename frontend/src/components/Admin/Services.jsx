@@ -32,19 +32,19 @@ const Services = () => {
 
     if (editingId) {
       const response = await updateService(editingId, formData);
-      if (response.success) { alert("Service update ho gayi!"); resetForm(); }
+      if (response.success) { alert("Service updated!"); resetForm(); }
       else alert(response.message || "Update error!");
     } else {
-      if (!image) { alert("Service image upload karna zaroori hai!"); setLoading(false); return; }
+      if (!image) { alert("Uploading a service image is mandatory!"); setLoading(false); return; }
       const response = await addService(formData);
-      if (response.success) { alert("Service add ho gayi!"); resetForm(); }
+      if (response.success) { alert("Service added!"); resetForm(); }
       else alert(response.message || "Add error!");
     }
     setLoading(false);
   };
 
   const handleDeleteClick = async (id) => {
-    if (window.confirm("Kya tum sach me is service ko delete karna chahte ho?")) {
+    if (window.confirm("Do you really want to delete this service?")) {
       const response = await deleteService(id);
       if (!response.success) alert(response.message || "Delete error!");
     }

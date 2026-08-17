@@ -13,7 +13,9 @@ import Categories from './components/Admin/Categories';
 import Services from './components/Admin/Services';
 import PartnerRequests from './components/Admin/PartnerRequests';
 import Reviews from './components/Admin/Reviews';
-import AdminRoute from './components/AdminRoute'; 
+import AdminRoute from './components/AdminRoute';
+import Team from './components/Team';
+import EditProfile from './pages/EditProfile';
 
 function App() {
 
@@ -35,7 +37,8 @@ function App() {
         <Route path='/workers/:serviceId' element={<WorkerList />} />
         <Route path='/provider-profile/:providerId' element={<ProviderProfile />} />
         <Route path='/PartnerRegistration' element={<PartnerRegistration />} />
-
+        <Route path='/edit-profile/:id' element={<EditProfile />} />
+        <Route path='/team' element={<Team />} /> 
         {/* === PROTECTED ADMIN ROUTES (Sirf allowed emails wale) === */}
         {/* NAYA: AdminLayout ko AdminRoute ke andar wrap kar diya hai */}
         <Route 

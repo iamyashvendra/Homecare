@@ -1,22 +1,30 @@
-import React, { useState } from 'react';
-import { FaHouseChimneyMedical, FaBars, FaXmark } from "react-icons/fa6";
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaHouseChimneyMedical, FaBars, FaXmark, FaUserPen } from "react-icons/fa6";
 import { FaRegUser } from "react-icons/fa";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/clerk-react";
+import { AppContext } from "../context/AppContext"; // NAYA: Context import kiya
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
-  // NAYA: Function ko component ke andar move kiya taaki setIsMobileMenuOpen kaam kare
+  // NAYA: Clerk se user data aur Context se partners ka data nikala
+  const { user } = useUser();
+  const { partners } = useContext(AppContext);
+
+  // NAYA: Check karo kya login user ki email kisi partner se match karti hai?
+  const currentUserEmail = user?.primaryEmailAddress?.emailAddress;
+  const loggedInProvider = partners?.find(p => p.email === currentUserEmail);
+
+  // Scroll function ko ab component ke andar shift kar diya hai taaki error na aaye
   const scrollToSection = (id) => {
     const section = document.getElementById(id);
-
     if (section) {
       section.scrollIntoView({
         behavior: "smooth",
       });
     }
-
-    // Link par click hone ke baad mobile menu close ho jayega
     setIsMobileMenuOpen(false);
   };
 
@@ -28,44 +36,51 @@ const Navbar = () => {
         {/* Top Navbar Row */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
 
-          {/* Left Side: Homecare Logo & Brand Name */}
+          {/* Left Side: KarauliHomeCare Logo & Brand Name */}
           <div className="flex items-center gap-3">
             <div className="bg-green-100 text-green-600 w-10 h-10 flex items-center justify-center rounded-full shadow-sm">
               <FaHouseChimneyMedical className="text-lg" />
             </div>
 
-            <a href="/" className="text-2xl sm:text-3xl font-black tracking-wider uppercase text-slate-900">
-              HOME <span className="text-green-600">CARE</span>
-            </a>
+            <Link to="/" className="text-xl sm:text-2xl font-black tracking-wider uppercase text-slate-900">
+              Home <span className="text-green-600">Care</span>
+            </Link>
           </div>
 
-          {/* Right Side: Search, Login Button & Mobile Toggle */}
+          {/* Right Side: Login Button & Mobile Toggle */}
           <div className="flex items-center gap-4">
 
             {/* Desktop Login / Profile Section */}
-            <div className="hidden sm:flex items-center">
-              
+            <div className="hidden sm:flex items-center gap-4">
               <SignedOut>
                 <SignInButton mode="modal">
-                  <button className="flex items-center gap-2 border border-green-700 bg-gray-100 text-green-600 px-4 py-2 rounded-full hover:bg-green-50 transition duration-300 ease-in-out cursor-pointer font-semibold focus:outline-none w-full h-full">
+                  <button className="flex items-center gap-2 border border-green-700 bg-gray-100 text-green-600 px-4 py-2 rounded-full hover:bg-green-50 transition duration-300 ease-in-out cursor-pointer font-semibold focus:outline-none">
                     <FaRegUser className="text-lg" />
                     <span>Login</span>
                   </button>
                 </SignInButton>
               </SignedOut>
 
-              {/* Yahan Avatar ki size badhai gayi hai */}
               <SignedIn>
+                {/* NAYA: Agar user ek Provider hai, toh use Edit Profile ka button dikhao */}
+                {loggedInProvider && (
+                  <Link 
+                    to={`/edit-profile/${loggedInProvider._id}`}
+                    className="flex items-center gap-2 bg-[#001f3f] text-white px-4 py-2 rounded-full hover:bg-blue-900 transition font-semibold text-sm cursor-pointer shadow-sm"
+                  >
+                    <FaUserPen /> Edit Profile
+                  </Link>
+                )}
+
                 <UserButton 
                   afterSignOutUrl="/" 
                   appearance={{
                     elements: {
-                      userButtonAvatarBox: "w-10 h-10" // Isse size 40x40 ho jayegi
+                      userButtonAvatarBox: "w-10 h-10"
                     }
                   }}
                 />
               </SignedIn>
-
             </div>
 
             {/* Mobile Menu Toggle Button */}
@@ -92,80 +107,97 @@ const Navbar = () => {
           >
             Contact
           </button>
-          <a href="/PartnerRegistration" className="hover:text-green-600 transition duration-200">Become a Partner | Worker's</a>
+          <Link to="/PartnerRegistration" className="hover:text-green-600 transition duration-200">
+            Become a Partner | Worker's
+          </Link>
           <button
             onClick={() => scrollToSection("services")}
             className="hover:text-green-600 transition duration-200 cursor-pointer"
           >
             Services
           </button>
+          {/* Naya Team Link Desktop ke liye */}
+          <Link to="/team" className="hover:text-green-600 transition duration-200">
+            Our Team
+          </Link>
         </div>
 
         {/* Mobile Dropdown Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-200 py-4 px-6 space-y-4 shadow-xl flex flex-col">
-            
-            {/* NAYA: yahan a tag ki jagah button laga kar onClick function set kar diya */}
+          <div className="md:hidden bg-white border-t border-gray-200 py-4 px-6 space-y-4 shadow-xl">
             <button 
-              onClick={() => scrollToSection("about")} 
-              className="text-left w-full text-gray-700 font-medium hover:text-green-600 cursor-pointer"
+              onClick={() => { scrollToSection("about"); }} 
+              className="block w-text-left text-gray-700 font-medium hover:text-green-600 text-left"
             >
               About Us
             </button>
-            
             <button 
-              onClick={() => scrollToSection("contact")} 
-              className="text-left w-full text-gray-700 font-medium hover:text-green-600 cursor-pointer"
+              onClick={() => { scrollToSection("contact"); }} 
+              className="block w-text-left text-gray-700 font-medium hover:text-green-600 text-left"
             >
               Contact
             </button>
-            
-            {/* Ye external page par jayega isliye isko 'a' tag hi rakha hai */}
-            <a 
-              href="/PartnerRegistration" 
-              className="block w-full text-gray-700 font-medium hover:text-green-600"
+            <Link 
+              to="/PartnerRegistration" 
+              onClick={() => setIsMobileMenuOpen(false)} 
+              className="block text-gray-700 font-medium hover:text-green-600"
             >
               Become a Partner | Worker's
-            </a>
-            
+            </Link>
             <button 
-              onClick={() => scrollToSection("services")} 
-              className="text-left w-full text-gray-700 font-medium hover:text-green-600 cursor-pointer"
+              onClick={() => { scrollToSection("services"); }} 
+              className="block w-text-left text-gray-700 font-medium hover:text-green-600 text-left"
             >
               Services
             </button>
+            {/* Naya Team Link Mobile ke liye */}
+            <Link 
+              to="/team" 
+              onClick={() => setIsMobileMenuOpen(false)} 
+              className="block text-gray-700 font-medium hover:text-green-600"
+            >
+              Our Team
+            </Link>
 
             {/* Login Button / Avatar inside Mobile Menu */}
-            <div className="pt-4 border-t border-gray-100 flex justify-center">
-              
+            <div className="pt-4 border-t border-gray-100 flex flex-col gap-4 items-center">
               <SignedOut>
                 <SignInButton mode="modal">
-                  <button className="relative overflow-hidden w-full flex justify-center items-center gap-2 bg-gray-100 text-green-600 py-3 rounded-full font-semibold shadow-md cursor-pointer after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-[3px] after:bg-green-600 after:transition-all after:duration-300">
+                  <button className="relative overflow-hidden w-full flex justify-center items-center gap-2 bg-gray-100 text-green-600 py-3 rounded-full font-semibold shadow-md cursor-pointer">
                     <FaRegUser /> Login
                   </button>
                 </SignInButton>
               </SignedOut>
 
-              {/* Mobile Avatar ki size bhi yahan badha di hai */}
               <SignedIn>
+                {/* Mobile ke liye Edit Profile Button */}
+                {loggedInProvider && (
+                  <Link 
+                    to={`/edit-profile/${loggedInProvider._id}`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full flex justify-center items-center gap-2 bg-[#001f3f] text-white py-3 rounded-full font-semibold shadow-md cursor-pointer"
+                  >
+                    <FaUserPen /> Edit Profile
+                  </Link>
+                )}
+                
                 <div className="py-1">
                   <UserButton 
                     afterSignOutUrl="/" 
                     appearance={{
                       elements: {
-                        userButtonAvatarBox: "w-11 h-11" // Mobile ke liye thoda aur bada (44x44)
+                        userButtonAvatarBox: "w-11 h-11"
                       }
                     }}
                   />
                 </div>
               </SignedIn>
-
             </div>
           </div>
         )}
       </header>
     </>
   );
-}
+};
 
 export default Navbar;

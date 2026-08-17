@@ -15,10 +15,10 @@ const Reviews = () => {
   });
 
   const handleDeleteClick = async (id) => {
-    if (window.confirm("Kya tum sach me is review ko delete karna chahte ho?")) {
+    if (window.confirm("Do you really want to delete this review?")) {
       try {
         const response = await deleteReview(id);
-        if (response.success) alert("Review delete ho gaya!");
+        if (response.success) alert("The review got deleted!");
         else alert(response.message || "Delete error.");
       } catch (error) { console.error("Delete error:", error); }
     }

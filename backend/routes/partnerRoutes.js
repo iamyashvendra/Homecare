@@ -5,6 +5,7 @@ import {
   getAllPartners,
   updatePartnerStatus,
   deletePartner,
+  updatePartnerProfile
 } from '../controllers/partnerController.js';
 import { upload } from '../config/cloudinary.js';
 import Partner from '../models/Partner.js';
@@ -15,6 +16,7 @@ router.post(
   '/register',
   upload.fields([
     { name: 'profileImage', maxCount: 1 },
+    { name: 'bannerImage', maxCount: 1 },
     { name: 'gallery', maxCount: 5 },
   ]),
   registerPartner
@@ -54,4 +56,13 @@ router.get('/:id', async (req, res) => {
 router.put('/:id/status', updatePartnerStatus);
 router.delete('/:id', deletePartner);
 
+router.put(
+  '/:id',
+  upload.fields([
+    { name: 'profileImage', maxCount: 1 },
+    { name: 'bannerImage', maxCount: 1 },
+    { name: 'gallery', maxCount: 5 },
+  ]),
+  updatePartnerProfile
+);
 export default router;

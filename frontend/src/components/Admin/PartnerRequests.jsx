@@ -20,7 +20,7 @@ const PartnerRequests = () => {
     try {
       const response = await updatePartnerStatus(id, "Approved");
       if (response.success) alert("Partner request approved!");
-      else alert(response.message || "Approve karne me error aayi.");
+      else alert(response.message || "An error occurred during approval.");
     } catch (error) { console.error("Approve error:", error); }
   };
 
@@ -28,12 +28,12 @@ const PartnerRequests = () => {
     try {
       const response = await updatePartnerStatus(id, "Rejected");
       if (response.success) alert("Partner request rejected!");
-      else alert(response.message || "Reject karne me error aayi.");
+      else alert(response.message || "An error occurred while rejecting.");
     } catch (error) { console.error("Reject error:", error); }
   };
 
   const handleDeleteClick = async (id) => {
-    if (window.confirm("Kya tum sach me is request ko delete karna chahte ho?")) {
+    if (window.confirm("Do you really want to delete this request?")) {
       try {
         const response = await deletePartner(id);
         if (response.success) alert("Partner request deleted!");
