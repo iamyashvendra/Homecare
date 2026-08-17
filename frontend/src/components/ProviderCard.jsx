@@ -181,14 +181,18 @@ const ProviderCard = () => {
 
             {/* NAYA: Buttons container (WhatsApp + Review) */}
             <div className="flex items-center gap-3 z-10">
-              <a 
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-[#25D366] hover:bg-[#1ebe57] text-white font-bold px-4 py-2.5 rounded-xl shadow transition cursor-pointer flex items-center gap-2 text-sm"
-              >
-                <FaWhatsapp className="text-lg" /> Chat
-              </a>
+              
+              {/* NAYA CONDITION: Agar true (ya default undefined) hai, tabhi dikhao */}
+              {worker.showWhatsapp !== false && (
+                <a 
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[#25D366] hover:bg-[#1ebe57] text-white font-bold px-4 py-2.5 rounded-xl shadow transition cursor-pointer flex items-center gap-2 text-sm"
+                >
+                  <FaWhatsapp className="text-lg" /> Chat
+                </a>
+              )}
 
               <button 
                 onClick={() => setIsReviewModalOpen(true)}
@@ -282,16 +286,18 @@ const ProviderCard = () => {
                   <span><strong className="text-gray-900 block mb-1">Phone:</strong> {worker.phone || "Not provided"}</span>
                 </li>
 
-                {/* NAYA: WhatsApp detail list me bhi add kiya */}
-                <li className="flex items-start gap-4">
-                  <FaWhatsapp className="text-[#25D366] text-xl shrink-0" />
-                  <span>
-                    <strong className="text-gray-900 block mb-1">WhatsApp:</strong> 
-                    <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline font-medium">
-                      Message Now
-                    </a>
-                  </span>
-                </li>
+                {/* NAYA CONDITION: WhatsApp detail list me */}
+                {worker.showWhatsapp !== false && (
+                  <li className="flex items-start gap-4">
+                    <FaWhatsapp className="text-[#25D366] text-xl shrink-0" />
+                    <span>
+                      <strong className="text-gray-900 block mb-1">WhatsApp:</strong> 
+                      <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline font-medium">
+                        Message Now
+                      </a>
+                    </span>
+                  </li>
+                )}
 
                 <li className="flex items-start gap-4">
                   <FaEnvelope className="text-[#001f3f] text-base mt-1 shrink-0" />

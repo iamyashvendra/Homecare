@@ -5,7 +5,7 @@ export const registerPartner = async (req, res) => {
   try {
     const {
       fullName, phone, email, category, service, experience,
-      languages, visitingCharge, city, workingHours, bio,
+      languages, visitingCharge, city, workingHours, bio, showWhatsapp
     } = req.body;
 
     const profileImageUrl = req.files && req.files['profileImage'] ? req.files['profileImage'][0].path : '';
@@ -18,7 +18,7 @@ export const registerPartner = async (req, res) => {
 
     const newPartner = new Partner({
       fullName, phone, email, category, service, experience,
-      languages, visitingCharge, city, workingHours, bio,
+      languages, visitingCharge, city, workingHours, bio, showWhatsapp,
       profileImage: profileImageUrl, 
       bannerImage: bannerImageUrl, // NAYA: Database save me pass kiya[cite: 4]
       gallery: galleryUrls,

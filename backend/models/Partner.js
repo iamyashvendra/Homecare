@@ -6,6 +6,7 @@ const partnerSchema = new mongoose.Schema(
     profileImage: { type: String, required: true },
     bannerImage: { type: String },
     phone: { type: String, required: true },
+    showWhatsapp: { type: Boolean, default: true },
     email: { type: String },
     category: { type: String, required: true },
     service: { type: String, required: true },

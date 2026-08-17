@@ -17,6 +17,7 @@ const PartnerRegistration = () => {
     profileImage: null,
     bannerImage: null, // <--- NAYA: Banner image ko state me add kiya[cite: 7]
     phone: "",
+    showWhatsapp: true,
     email: "",
     category: "",
     service: "", 
@@ -100,8 +101,11 @@ const PartnerRegistration = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({ 
+      ...prev, 
+      [name]: type === "checkbox" ? checked : value 
+    }));
   };
 
   const handlePictureChange = (e) => {
@@ -172,6 +176,20 @@ const PartnerRegistration = () => {
                 placeholder="+91 XXXXX XXXXX"
                 className="mt-1.5 w-full h-11 sm:h-12 px-3 sm:px-4 text-sm sm:text-base rounded-xl border-2 border-[#e2e8f0] bg-[#f8fafc] outline-none focus:border-[#2ba955] transition-colors"
               />
+            </div>
+
+            <div className="w-full flex items-center gap-3 mt-2 md:mt-8">
+              <input
+                type="checkbox"
+                name="showWhatsapp"
+                id="showWhatsapp"
+                checked={formData.showWhatsapp === true || formData.showWhatsapp === "true"}
+                onChange={handleChange}
+                className="w-5 h-5 accent-green-600 cursor-pointer"
+              />
+              <label htmlFor="showWhatsapp" className="text-sm font-medium text-[#001f3f] cursor-pointer">
+                Show WhatsApp Chat Button on Profile
+              </label>
             </div>
 
             <div className="w-full">
