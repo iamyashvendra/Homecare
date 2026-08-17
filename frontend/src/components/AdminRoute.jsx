@@ -8,7 +8,8 @@ const AdminRoute = ({ children }) => {
   // YAHAN APNI AUR APNE BAAKI ADMINS KI EMAIL DAAL DO
   const allowedAdmins = [
     "yashvender720@gmail.com", // Ise apni asli email se replace karo
-    "garvitfr@gmail.com"
+    "garvitfr@gmail.com",
+    "sparshsinghal0506@gmail.com"
   ];
 
   // Jab tak Clerk check kar raha hai, tab tak loading dikhao
