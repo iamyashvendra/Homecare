@@ -1,6 +1,7 @@
 import React from "react";
 import { FaArrowLeft, FaGithub } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { FaHouseChimneyMedical } from "react-icons/fa6"; 
+import { useNavigate, Link } from "react-router-dom";
 
 const Team = () => {
   const navigate = useNavigate();
@@ -11,7 +12,8 @@ const Team = () => {
       role: "Full Stack Developer",
       image: "https://res.cloudinary.com/dpzuoyw88/image/upload/v1786988128/Picsart_26-03-28_03-39-38-041_l4idco.jpg",
       github: "https://github.com/iamyashvendra",
-    },{
+    },
+    {
       name: "Garvitt Soni",
       role: "Full Stack Developer",
       image: "https://res.cloudinary.com/dn0pwidh2/image/upload/v1786948781/homecare_partners/i2ozyamncmmzsq8aqb73.jpg",
@@ -44,20 +46,33 @@ const Team = () => {
   ];
 
   return (
-    <section className="bg-gray-100 min-h-screen pb-20 overflow-hidden">
-      {/* Responsive Header */}
-      <header className="bg-white px-4 sm:px-6 py-4 sm:py-5 shadow-sm flex items-center justify-between sticky top-0 z-50">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-600 hover:text-green-600 transition cursor-pointer"
-        >
-          <FaArrowLeft /> Back
-        </button>
+    // NAYA CHANGE: Yahan se overflow-hidden hata diya taaki sticky kaam kare
+    <div className="bg-gray-100 min-h-screen pb-20">
+      
+      {/* FIXED/STICKY NAVBAR - Ab ye 100% screen ke top par hi chipka rahega */}
+      <header className="bg-white px-4 sm:px-6 py-4 shadow-sm flex items-center justify-between sticky top-0 z-50">
+        {/* Left: Back Button */}
+        <div className="w-20 sm:w-32 flex justify-start">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-600 hover:text-green-600 transition cursor-pointer"
+          >
+            <FaArrowLeft /> Back
+          </button>
+        </div>
 
-        <h2 className="text-xl sm:text-2xl font-black uppercase text-[#001f3f]">
-          HOME<span className="text-green-600">CARE</span>
-        </h2>
-        <div className="w-16 sm:w-24"></div>
+        {/* Center: Main App Logo & Link */}
+        <div className="flex items-center justify-center gap-2 sm:gap-3 flex-1">
+          <div className="bg-green-100 text-green-600 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full shadow-sm">
+            <FaHouseChimneyMedical className="text-sm sm:text-lg" />
+          </div>
+          <Link to="/" className="text-lg sm:text-2xl font-black tracking-wider uppercase text-slate-900 hover:text-green-600 transition">
+            Home <span className="text-green-600">Care</span>
+          </Link>
+        </div>
+
+        {/* Right: Invisible Spacer */}
+        <div className="w-20 sm:w-32"></div>
       </header>
 
       {/* Responsive Hero Banner */}
@@ -71,7 +86,8 @@ const Team = () => {
       </div>
 
       {/* Responsive Team Members Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      {/* NAYA CHANGE: overflow-hidden ko yahan grid wrapper me laga diya */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 overflow-hidden">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {teamMembers.map((member, index) => (
             <div
@@ -103,7 +119,7 @@ const Team = () => {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
