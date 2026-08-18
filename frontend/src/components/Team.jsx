@@ -20,7 +20,7 @@ const Team = () => {
     {
       name: "Sparsh Singhal",
       role: "Backend Developer",
-      image: "https://via.placeholder.com/150",
+      image: "https://res.cloudinary.com/dpzuoyw88/image/upload/v1787030965/IMG_4073_mbi32q.jpg",
       github: "https://github.com/",
     },
     {
@@ -32,6 +32,12 @@ const Team = () => {
     {
       name: "Arpit Jain",
       role: "Database Manager",
+      image: "https://via.placeholder.com/150",
+      github: "https://github.com/",
+    },
+    {
+      name: "Ankit Verma",
+      role: "Frontend Manager",
       image: "https://via.placeholder.com/150",
       github: "https://github.com/",
     },
