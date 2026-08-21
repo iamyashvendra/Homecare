@@ -97,14 +97,14 @@ const Footer = () => {
             <div className="flex gap-3 sm:gap-4">
               <FaPhoneAlt className="text-green-500 mt-1 flex-shrink-0" />
               <div>
-                <p>+91 784547 8516</p>
-                <p>+91 14578 45789</p>
+                <p>+91 XXXXXX 8516</p>
+                <p>+91 XXXXXX 5789</p>
               </div>
             </div>
 
             <div className="flex gap-3 sm:gap-4">
               <FaEnvelope className="text-green-500 mt-1 flex-shrink-0" />
-              <p className="break-all">yashvender720@gmail.com</p>
+              <p className="break-all">supporthomcare@gmail.com</p>
             </div>
           </div>
         </div>
